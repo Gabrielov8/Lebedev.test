@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../pages/Home.vue'
+import FirstTaskPage from '../pages/FirstTaskPage'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: { name: 'FirstTask' }
+  },
+  {
+    path: '/first-task',
+    name: 'FirstTask',
+    component: FirstTaskPage,
+    meta: { layout: 'personal-area', icon: 'first-number', title: 'Задача №1' }
   },
   {
     path: '/about',
