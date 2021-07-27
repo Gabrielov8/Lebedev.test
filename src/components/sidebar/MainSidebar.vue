@@ -45,7 +45,7 @@ export default {
   grid-template-rows: 1fr 7fr 1fr;
   width: 18%;
   padding: 1.5em 0;
-  background-color: #2c2b2b;
+  background-color: $main-dark-color;
   color: #fff;
   height: 100%;
   &_hide {

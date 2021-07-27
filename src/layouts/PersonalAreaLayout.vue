@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     toggleSidebar () {
-      console.log(1)
       this.showSidebar = !this.showSidebar
     }
   }
