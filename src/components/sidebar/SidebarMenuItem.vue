@@ -4,13 +4,13 @@
       :to="{ name }"
       class="menu-item__link"
     >
-      <img
-        class="menu-item__logo"
-        :src="getLink"
-        :alt="getAlt"
-        width="20"
-        height="20"
-      >
+<!--      <img-->
+<!--        class="menu-item__logo"-->
+<!--        :src="getLink"-->
+<!--        :alt="getAlt"-->
+<!--        width="20"-->
+<!--        height="20"-->
+<!--      >-->
       {{ title }}
     </router-link>
   </li>

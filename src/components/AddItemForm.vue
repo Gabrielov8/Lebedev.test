@@ -1,9 +1,10 @@
 <template>
-  <form @submit.prevent="addElement" class="form">
+  <form class="form" @submit.prevent="addElement">
     <h2 class="form__title">Добавить элемент</h2>
     <v-select
       v-model="addElementForm.type"
       :options="selectOptions"
+      placeholder="Выберите тип фигуры"
       required
     />
     <template v-if="showGeneralFields">
@@ -56,14 +57,14 @@
         <input
           v-model="addElementForm.width"
           class="form__input"
-          type="text"
+          type="number"
           placeholder="Введите ширину"
           required
         >
         <input
           v-model="addElementForm.height"
           class="form__input"
-          type="text"
+          type="number"
           placeholder="Введите высоту"
           required
         >
@@ -71,11 +72,13 @@
     </template>
     <button
       class="form__btn"
+      type="button"
       @click="resetForm"
     >
       Очистить форму
     </button>
     <button
+      type="submit"
       class="form__btn"
     >
       Добавить
@@ -111,6 +114,7 @@ export default {
         }
       ],
       addElementForm: {
+        id: '',
         type: null,
         radius: null,
         radius2: null,
@@ -119,17 +123,11 @@ export default {
         y: null,
         width: null,
         height: null,
-        fillColor: 'green'
+        fillColor: ''
       }
     }
   },
   computed: {
-    showFormAddCircle () {
-      return this.addElementForm.type?.value === 'circle'
-    },
-    showFormAddTriangle () {
-      return this.addElementForm.type?.value === 'triangle'
-    },
     showFormAddStar () {
       return this.addElementForm.type?.value === 'star'
     },
@@ -142,6 +140,7 @@ export default {
   },
   methods: {
     addElement () {
+      this.addElementForm.id = Date.now() + ''
       this.$emit('add-new-element', this.addElementForm)
     },
     resetForm () {
