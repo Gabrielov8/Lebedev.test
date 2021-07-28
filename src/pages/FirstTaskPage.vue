@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .page {
   padding: 1em;
   display: grid;

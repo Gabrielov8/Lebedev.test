@@ -11,7 +11,7 @@ export const circle = {
 
 export const star = {
   points: 6,
-  radius1: 20,
+  radius: 20,
   radius2: 40
 }
 

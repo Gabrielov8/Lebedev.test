@@ -8,13 +8,17 @@
 
 <script>
 import { PaperScope, Tool, Path, Point } from 'paper'
-import { quantityElements, rectangle, circle, star, triangle } from '../services/default-data'
+import { quantityElements, rectangle, circle, star } from '../services/default-data'
 export default {
   name: 'Canvas',
   props: {
     canvasId: {
       type: String,
       required: true
+    },
+    newElement: {
+      type: Object,
+      default: null
     }
   },
   data () {
@@ -25,6 +29,29 @@ export default {
         stroke: true,
         fill: true,
         tolerance: 5
+      }
+    }
+  },
+  watch: {
+    newElement: {
+      handler: function (element) {
+        if (element) {
+          switch (element.type?.value) {
+            case 'circle':
+              this.createCircles(element.fillColor, Number(element.x), Number(element.y), Number(element.radius))
+              break
+            case 'triangle':
+              this.createTriangle(element)
+              break
+            case 'star':
+              this.createStar(element.fillColor, Number(element.x), Number(element.y), Number(element.points), Number(element.radius),
+                Number(element.radius2))
+              break
+            case 'rectangle':
+              this.createRectangle(element.fillColor, element.x, element.y, element.width, element.height)
+              break
+          }
+        }
       }
     }
   },
@@ -40,30 +67,33 @@ export default {
       scope.activate()
       return new Tool()
     },
-    createTriangle (fillColor, firstPoint, secondPoint, thirdPoint) {
-      const triangle = new Path()
-      triangle.add(new Point(firstPoint))
-      triangle.add(new Point(secondPoint))
-      triangle.add(new Point(thirdPoint))
-      triangle.closed = true
+    createTriangle ({
+      fillColor,
+      x,
+      y,
+      radius
+    }) {
+      const center = new Point(x, y)
+      const side = 3
+      const triangle = new Path.RegularPolygon(center, side, radius)
       triangle.fillColor = fillColor
       return triangle
     },
-    createStar (fillColor, x, y, points, radius1, radius2) {
+    createStar (fillColor, x, y, points, radius, radius2) {
       return new Path.Star({
         center: new Point(x, y),
         points,
-        radius1,
+        radius1: radius,
         radius2,
         fillColor
       })
     },
     createRectangle (fillColor, x, y, width, height) {
       return new Path.Rectangle({
-        x,
-        y,
-        width,
-        height,
+        x: Number(x),
+        y: Number(y),
+        width: Number(width),
+        height: Number(height),
         fillColor
       })
     },
@@ -104,17 +134,20 @@ export default {
       }
     },
     createDefaultElements () {
+      if (this.$route.name !== 'FirstTask') {
+        return
+      }
       for (let i = 0; i < quantityElements; i++) {
         const randomColor = {
           hue: Math.random() * 360,
           saturation: 1,
-          lightness: (Math.random() - 0.5) * 0.4 + 0.3
+          lightness: (Math.random() - 0.5) * 0.4 + 0.6
         }
         this.createCircles(
           randomColor,
           this.getRandomNumber(this.scope.view.size.width),
           this.getRandomNumber(this.scope.view.size.height),
-          circle.radius
+          this.getRandomNumber(circle.radius)
         )
         this.createRectangle(
           randomColor,
@@ -123,19 +156,19 @@ export default {
           rectangle.width,
           rectangle.height
         )
-        this.createTriangle(
-          randomColor,
-          triangle.firstPoint,
-          triangle.secondPoint,
-          triangle.thirdPoint
-        )
+        this.createTriangle({
+          fillColor: randomColor,
+          x: this.getRandomNumber(this.scope.view.size.width),
+          y: this.getRandomNumber(this.scope.view.size.height),
+          radius: this.getRandomNumber(30, 10)
+        })
         this.createStar(
           randomColor,
           this.getRandomNumber(this.scope.view.size.width),
           this.getRandomNumber(this.scope.view.size.height),
           star.points,
-          star.radius1,
-          star.radius2
+          star.radius,
+          this.getRandomNumber(star.radius2, 15)
         )
       }
     }
@@ -154,6 +187,6 @@ export default {
   border: 1px solid $main-dark-color;
   border-radius: 5px;
   //background-color: $main-dark-color;
-  //background-color: black;
+  background-color: black;
 }
 </style>
