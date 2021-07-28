@@ -19,6 +19,10 @@ export default {
     newElement: {
       type: Object,
       default: null
+    },
+    removeItemId: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -33,22 +37,25 @@ export default {
     }
   },
   watch: {
+    removeItemId: function (id) {
+      this.scope.project.activeLayer.children[`id${id}`].remove()
+    },
     newElement: {
       handler: function (element) {
         if (element) {
           switch (element.type?.value) {
             case 'circle':
-              this.createCircles(element.fillColor, Number(element.x), Number(element.y), Number(element.radius))
+              this.createCircles(element.fillColor, Number(element.x), Number(element.y), Number(element.radius), element.id)
               break
             case 'triangle':
               this.createTriangle(element)
               break
             case 'star':
               this.createStar(element.fillColor, Number(element.x), Number(element.y), Number(element.points), Number(element.radius),
-                Number(element.radius2))
+                Number(element.radius2), element.id)
               break
             case 'rectangle':
-              this.createRectangle(element.fillColor, element.x, element.y, element.width, element.height)
+              this.createRectangle(element.fillColor, element.x, element.y, element.width, element.height, element.id)
               break
           }
         }
@@ -71,37 +78,42 @@ export default {
       fillColor,
       x,
       y,
-      radius
+      radius,
+      id
     }) {
       const center = new Point(x, y)
       const side = 3
       const triangle = new Path.RegularPolygon(center, side, radius)
       triangle.fillColor = fillColor
+      triangle.name = 'id' + id
       return triangle
     },
-    createStar (fillColor, x, y, points, radius, radius2) {
+    createStar (fillColor, x, y, points, radius, radius2, id) {
       return new Path.Star({
         center: new Point(x, y),
         points,
         radius1: radius,
         radius2,
-        fillColor
+        fillColor,
+        name: 'id' + id
       })
     },
-    createRectangle (fillColor, x, y, width, height) {
+    createRectangle (fillColor, x, y, width, height, id) {
       return new Path.Rectangle({
         x: Number(x),
         y: Number(y),
         width: Number(width),
         height: Number(height),
-        fillColor
+        fillColor,
+        name: 'id' + id
       })
     },
-    createCircles (fillColor, x, y) {
+    createCircles (fillColor, x, y, radius, id) {
       return new Path.Circle({
         center: [x, y],
         radius: 20,
-        fillColor
+        fillColor,
+        name: 'id' + id
       })
     },
     mouseDown () {
@@ -186,7 +198,6 @@ export default {
   height: 300px;
   border: 1px solid $main-dark-color;
   border-radius: 5px;
-  //background-color: $main-dark-color;
   background-color: black;
 }
 </style>

@@ -31,7 +31,6 @@ export default {
       this.$nextTick(() => {
         this.newElement = null
       })
-      // console.log(this.addedElement, 'result')
     }
   }
 }
